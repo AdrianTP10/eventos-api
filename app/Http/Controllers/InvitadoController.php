@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invitado;
+use App\Models\Evento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Invitacion;
+use Illuminate\Support\Facades\DB;
 
 class InvitadoController extends Controller
 {
@@ -12,7 +16,7 @@ class InvitadoController extends Controller
      */
     public function index()
     {
-        //
+        return Invitado::all();
     }
 
     /**
@@ -21,12 +25,34 @@ class InvitadoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'evento_id' => ['required', 'max:10','exists:rutas'],
+            'evento_id' => ['required', 'max:10','exists:eventos,id'],
             'correo' => ['required', 'email'],
-            'identificador_qr' => ['required', 'string','max:30'],
         ]);
+
+       
+        if (DB::table('invitados')->where('evento_id','=',$request->evento_id)->where('correo','=',$request->correo)->exists()) {
+            return [
+                "estatus" => "Este invitado ya se encuentra registrado",
+            ];
+        }else{
+
+           
+            
+            $invitado = new Invitado($validated);
+            $invitado->identificador_qr = fake()->unique()->numberBetween($min = 1000, $max = 32000);
+            $invitado->save();
+            $evento = Evento::find($invitado->evento_id);
+            Mail::to($invitado->correo)->send(new Invitacion($evento, $invitado));
+            return [
+                "estatus" => "Se ha enviado una invitacion al correo: ".$invitado->correo,
+            ]; 
+        }
         
-        Invitado::create($validated);
+        
+        
+        
+
+        
         /* $ruta = Ruta::firstWhere('nombre', $request->nombre);
         $pedido = new Pedido();
         $pedido->cantidad_pedido = $request->cantidad_pedido;
@@ -41,15 +67,29 @@ class InvitadoController extends Controller
      */
     public function show(Invitado $invitado)
     {
-        //
+       
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Invitado $invitado)
+    public function update(Request $request, $qr)
     {
-        //
+        $invitado = Invitado::where('identificador_qr' , $qr)->where('evento_id' , $request->evento_id)->firstOrFail();
+       /*  $flight = Flight::findOrFail(1);
+ 
+        $flight = Flight::where('legs', '>', 3)->firstOrFail(); */
+
+        $request->validate([
+            'identificador_qr' => 'exists:invitados,identificador_qr',
+        ]);
+           
+        $invitado->asistio = 1;
+        $invitado->update();
+        return [
+            "invitado" => $invitado->correo
+        ];
+       
     }
 
     /**

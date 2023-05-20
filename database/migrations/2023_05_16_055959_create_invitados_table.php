@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('evento_id')->constrained();
             $table->string('correo',65);
-            $table->smallInteger('identificador_qr');
+            $table->smallInteger('identificador_qr')->unique();
             $table->boolean('asistio')->default(false);
             $table->timestamps();
         });

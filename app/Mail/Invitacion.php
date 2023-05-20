@@ -2,6 +2,9 @@
 
 namespace App\Mail;
 
+use App\Models\Evento;
+use App\Models\Invitado;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,13 +16,14 @@ class Invitacion extends Mailable
 {
     use Queueable, SerializesModels;
 
+    
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(
+        public Evento $evento,
+        public Invitado $invitado,
+    ) {}
 
     /**
      * Get the message envelope.
@@ -27,7 +31,7 @@ class Invitacion extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Invitacion',
+            subject: 'Invitacion a evento',
         );
     }
 
@@ -37,7 +41,7 @@ class Invitacion extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.invitacion',
         );
     }
 

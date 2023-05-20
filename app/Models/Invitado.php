@@ -14,7 +14,7 @@ class Invitado extends Model
     
     protected $table = 'invitados';
 
-    protected $fillable = ['evento_id', 'correo'];
+    protected $fillable = ['evento_id', 'correo','identificador_qr'];
 
     public function evento(): BelongsTo
     {

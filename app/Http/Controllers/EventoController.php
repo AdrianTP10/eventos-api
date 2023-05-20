@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evento;
+use App\Models\Invitado;
 use App\Http\Requests\StoreEventoRequest;
 use App\Http\Requests\UpdateEventoRequest;
 
@@ -13,7 +14,16 @@ class EventoController extends Controller
      */
     public function index()
     {
-        return Evento::all();
+        return Evento::all()->map(function ($evento) {
+            return [
+                'id' => $evento->id,
+                'descripcion' => $evento->descripcion,
+                'ubicacion' => $evento->ubicacion,
+                'fecha' => $evento->fecha,
+                'invitados' => Invitado::where('evento_id', $evento->id)->count(),
+                'asistentes' => Invitado::where('evento_id', $evento->id)->where('asistio', true)->count(),
+            ];
+        });
     }
 
     /**
@@ -29,20 +39,30 @@ class EventoController extends Controller
      */
     public function store(StoreEventoRequest $request)
     {
-        $evento = new Evento();
+        Evento::create($request->validated());
+        /* $evento = new Evento();
         $evento->descripcion = $request->descripcion;
         $evento->ubicacion = $request->ubicacion;
         $evento->fecha = $request->fecha;
-        $evento->save();
+        $evento->save(); */
     }
 
     /**
      * Display the specified resource.
      */
-   /*  public function show(Evento $evento)
+    public function show(Evento $evento)
     {
-        //
-    } */
+        return [
+            "evento" => $evento, 
+            "invitados"=>Invitado::where('evento_id',$evento->id)->get()->map(function($invitado){
+                return [
+                    'id' => $invitado->id,
+                    'asistio' => $invitado->asistio,
+                    'correo' => $invitado->correo,
+                ];
+            })
+        ];
+    }
 
     /**
      * Show the form for editing the specified resource.

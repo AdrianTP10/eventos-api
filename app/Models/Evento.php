@@ -16,7 +16,7 @@ class Evento extends Model
 
     public function invitados(): HasMany
     {
-        return $this->hasMany(Invitado::class);
+        return $this->hasMany(Invitado::class)->only('id','asistio','correo');
     }
 
 }

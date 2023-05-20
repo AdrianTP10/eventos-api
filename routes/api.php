@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\EventoController;
+use App\Http\Controllers\InvitadoController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::resource('/eventos', EventoController::class)->names('eventos');
+
+Route::resource('/invitados', InvitadoController::class)->names('invitados');
