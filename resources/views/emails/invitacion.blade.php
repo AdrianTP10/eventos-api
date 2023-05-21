@@ -29,8 +29,9 @@
 <body>
     <div>
         <p>Hola, estás invitado al evento {{$evento->descripcion}}, con ubicación en {{$evento->ubicacion}}  </p>
-        {{ QrCode::format('png')->size(200)->generate($invitado->identificador_qr) }}
-
+        {{ QrCode::size(200)->generate($invitado->identificador_qr) }} 
+      
+      
         <p>Presenta este codigo de invitación en la entrada del evento.</p>
     </div>
    
