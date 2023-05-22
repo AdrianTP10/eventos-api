@@ -16,9 +16,8 @@
         justify-content: center;
         padding:10px 7px;
         margin: 2px;
-        background-color: #b3084991;
         
-        border-radius: 5%
+       
     }
 
         p {
@@ -29,8 +28,11 @@
 <body>
     <div>
         <p>Hola, estás invitado al evento {{$evento->descripcion}}, con ubicación en {{$evento->ubicacion}}  </p>
-        {{ QrCode::size(200)->generate($invitado->identificador_qr) }} 
-      
+        <br>
+       {{--  {{ QrCode::format('png')->size(200)->generate($invitado->identificador_qr) }}  --}}
+        <a href={{route('invitados.show', $invitado->identificador_qr )}}>Sigue este enlace para ver tu código de invitación</a>
+        
+       
       
         <p>Presenta este codigo de invitación en la entrada del evento.</p>
     </div>

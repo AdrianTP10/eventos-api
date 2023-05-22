@@ -25,3 +25,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::resource('/eventos', EventoController::class)->names('eventos');
 
 Route::resource('/invitados', InvitadoController::class)->names('invitados');
+

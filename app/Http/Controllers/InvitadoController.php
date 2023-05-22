@@ -65,9 +65,9 @@ class InvitadoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Invitado $invitado)
+    public function show($invitado)
     {
-       
+        return view('qrcode', ['qr' => $invitado]);
     }
 
     /**
