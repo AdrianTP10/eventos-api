@@ -63,7 +63,7 @@
 <body>
     <div class="card">
         <h1>Invitación al Evento</h1>
-        <p>Escanea el código QR a continuación para marcar tu asistencia.</p>
+        <p>Muestra el código QR a continuación para marcar tu asistencia.</p>
         {{QrCode::size(200)->generate($qr)}}
       </div>
     
